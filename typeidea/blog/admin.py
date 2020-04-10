@@ -1,3 +1,4 @@
+
 from django.contrib.admin.models import LogEntry
 from django.contrib import admin
 from django.urls import reverse
@@ -5,10 +6,11 @@ from django.utils.html import format_html
 
 from .models import Post,Category,Tag
 from .adminforms import PostAdminForm
-from ..typeidea.custom_site import custom_site
-from ..typeidea.base_admin import BaseOwnerAdmin
+from typeidea.custom_site import custom_site
+from typeidea.base_admin import BaseOwnerAdmin
 
 
+#同一界面编辑关联数据
 class PostInline(admin.TabularInline):
     fields=('title','desc')
     extra = 1
@@ -24,10 +26,10 @@ class CategoryAdmin(BaseOwnerAdmin):
     def save_model(self,request,obj,form,change):
         obj.owner = request.user
         return super(CategoryAdmin,self).save_model(request,obj,form,change)
-    
+
     def post_count(self,obj):
         return obj.post_set.count()
-    
+
     post_count.short_description = "文章数量"
 
 @admin.register(Tag,site=custom_site)
@@ -48,7 +50,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
     def lookups(self,request,model_admin):
         return Category.objects.filter(owner=request.user).values_list('id','name')
-    
+
     def queryset(self,request,queryset):
         category_id = self.value()
         if category_id:
@@ -113,12 +115,12 @@ class PostAdmin(BaseOwnerAdmin):
     def save_model(self,request,obj,form,change):
         obj.owner = request.user
         return super(PostAdmin,self).save_model(request,obj,form,change)
-    
+
     def get_queryset(self,request):
         qs = super(PostAdmin,self).get_queryset(request)
         return qs.filter(owner=request.user)
 
-    
+
     # class Media:
     #     css = {
     #         'all':("https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css",),
