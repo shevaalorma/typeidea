@@ -35,9 +35,9 @@ def post_list(request, category_id=None, tag_id=None):
         'category': category,
         'tag': tag,
         'post_list': post_list,
-        'sidebars':SideBar.get_all()
+        'sidebars':SideBar.get_all() #返回未隐藏侧边栏
     }
-    context.update(Category.get_navs())
+    context.update(Category.get_navs())  #return navs categories
     return render(request, 'blog/list.html', context=context)
 
 
