@@ -56,8 +56,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'typeidea.urls'
 
-THEME = 'default'
-print(os.path.join(BASE_DIR,'themes','THEME','templates'))
+THEME = 'bootstrap'
+
 
 TEMPLATES = [
     {
