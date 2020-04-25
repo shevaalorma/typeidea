@@ -2,11 +2,11 @@ from django import forms
 from .models import Comment
 
 class CommentForm(forms.ModelForm):
-    nikename = forms.CharField(
+    nickname = forms.CharField(
         label='昵称',
         max_length=50,
         widget=forms.widgets.Input(
-            attrs={'class':'form-control','style':'60%'}
+            attrs={'class':'form-control','style': "width:60%;"}
         )
     )
 
@@ -14,7 +14,7 @@ class CommentForm(forms.ModelForm):
         label='Email',
         max_length=50,
         widget=forms.widgets.EmailInput(
-            attrs={'class':'form-control','style':'60%'}
+            attrs={'class':'form-control','style': "width:60%;"}
         )
     )
 
@@ -22,7 +22,7 @@ class CommentForm(forms.ModelForm):
         label= '网站',
         max_length=100,
         widget=forms.widgets.URLInput(
-            attrs={'class':'form-control','style':'60%'}
+            attrs={'class':'form-control','style': "width:60%;"}
         )
     )
 
@@ -30,7 +30,7 @@ class CommentForm(forms.ModelForm):
         label='内容',
         max_length=500,
         widget=forms.widgets.Textarea(
-            attrs={'row':6,'col':60,'style':'60%'}
+            attrs={'rows':6,'cols':60,'class':'form-control'}
         )
     )
 

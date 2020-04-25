@@ -93,6 +93,7 @@ class PostDetailView(CommonViewMixin, DetailView):
         context = super().get_context_data()
         context.update({
             'comment_form':CommentForm,
-            'comment_list':Comment.get_by_target(self.request.path)
+            'comment_list':Comment.get_by_target(self.request.path)#传入当前url返回正常状态，评论
         })
+        return context
 
