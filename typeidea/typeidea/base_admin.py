@@ -9,8 +9,12 @@ class BaseOwnerAdmin(admin.ModelAdmin):
     exclude = ('owner',)
 
     def get_queryset(self, request):
-        qs = super(BaseOwnerAdmin, self).get_queryset(request)
-        return qs.filter(owner=request.user)
+        if not request.user.is_superuser:
+            qs = super(BaseOwnerAdmin, self).get_queryset(request)
+            return qs.filter(owner=request.user)
+        else:
+            return super(BaseOwnerAdmin,self).get_queryset(request)
+
 
     def save_model(self, request, obj, form, change):
         obj.owner = request.user

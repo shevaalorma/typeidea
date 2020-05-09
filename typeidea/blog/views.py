@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import F, Q
 from django.shortcuts import get_object_or_404
 from .models import Post, Tag, Category
 from config.models import SideBar
@@ -19,7 +19,7 @@ class CommonViewMixin:
 class IndexView(CommonViewMixin, ListView):
     queryset = Post.latest_posts()
     paginate_by = 5
-    #指定获取的模型列表数据保存的变量名，这个变量会被传递给模板
+    # 指定获取的模型列表数据保存的变量名，这个变量会被传递给模板
     context_object_name = 'post_list'
     template_name = 'blog/list.html'
 
@@ -45,7 +45,8 @@ class AuthorView(IndexView):
     def get_queryset(self):
         queryset = super().get_queryset()
         author_id = self.kwargs.get('owner_id')
-        return queryset.filter(owner_id = author_id)
+        return queryset.filter(owner_id=author_id)
+
 
 class CategoryView(IndexView):
     def get_context_data(self, **kwargs):
@@ -73,15 +74,17 @@ class TagView(IndexView):
         })
         return context
 
-#通用视图在处理用户请求时，URL的变量和参数都会存放在通用视图的属性kwargs中
+    # 通用视图在处理用户请求时，URL的变量和参数都会存放在通用视图的属性kwargs中
     def get_queryset(self):
         queryset = super().get_queryset()
         tag_id = self.kwargs.get('tag_id')
-        #多对多查询
+        # 多对多查询
         return queryset.filter(tag__id=tag_id)
 
-from comment.forms import CommentForm
-from comment.models import Comment
+
+from datetime import date
+from django.core.cache import cache
+
 
 class PostDetailView(CommonViewMixin, DetailView):
     queryset = Post.latest_posts()
@@ -89,11 +92,34 @@ class PostDetailView(CommonViewMixin, DetailView):
     template_name = 'blog/detail.html'
     pk_url_kwarg = 'post_id'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        context.update({
-            'comment_form':CommentForm,
-            'comment_list':Comment.get_by_target(self.request.path)#传入当前url返回正常状态，评论
-        })
-        return context
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        self.handle_visited()
+        return response
+
+    def handle_visited(self):
+        increase_pv = False
+        increase_uv = False
+        uid = self.request.uid
+
+        pv_key = 'pv:{}:{}'.format(uid, self.request.path)
+        uv_key = 'uv:{}:{}:{}'.format(uid, str(date.today()), self.request.path)
+        # pv_key = 'pv:%s:%s' % (uid,self.request.path)
+        # uv_key = 'uv:%s:%s:%s' % (uid,str(date.today()),self.request.path)
+
+
+        if not cache.get(pv_key):
+            increase_pv = True
+            cache.set(pv_key, 1, 1 * 60)
+
+        if not cache.get(uv_key):
+            increase_uv = True
+            cache.set(uv_key, 1, 24* 60 * 24)
+
+        if increase_uv and increase_pv:
+            Post.objects.filter(pk=self.object.id).update(pv=F('pv') + 1, uv=F('uv') + 1)
+        elif increase_pv:
+            Post.objects.filter(pk=self.object.id).update(pv=F('pv') + 1)
+        elif increase_uv:
+            Post.objects.filter(pk=self.object.id).update(uv=F('uv') + 1)
 
