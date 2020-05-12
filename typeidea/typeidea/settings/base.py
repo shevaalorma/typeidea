@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'comment',
     'blog',
     'config',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,6 +57,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'typeidea.urls'
 
 THEME = 'bootstrap'
+# THEME = 'default'
 
 
 TEMPLATES = [

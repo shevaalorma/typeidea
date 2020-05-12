@@ -38,5 +38,4 @@ urlpatterns = [
     url(r'^admin/', custom_site.urls,name='admin'),
     url(r'^rss|feed/',LatestPostFeed(),name='rss'),
     url(r'^sitemap\.xml$',sitemap_views.sitemap,{'sitemaps':{'posts':PostSitemap}})
-
 ]
