@@ -57,22 +57,32 @@ manager.register(CategoryOwnerFilter, take_priority=True)
 @xadmin.sites.register(Post)
 class PostAdmin(BaseOwnerAdmin):
     form = PostAdminForm
+    #显示的字段
     list_display = [
         'title', 'category', 'status',
         'created_time', 'owner', 'operator'
     ]
+    #指定链接变蓝的字段
     list_display_links = []
 
-    list_filter = ['category', ]
+    #指定过滤能使用的字段，一般为外键
+    list_filter = ['category', 'owner']
+    #指定可以用来查询的字段
     search_fields = ['title', 'category__name']
-    save_on_top = True
 
     actions_on_top = True
     actions_on_bottom = True
 
-    # 编辑页面
+    # 用来控制是否在页面顶部展示上述的三个按钮。
     save_on_top = True
 
+    #fields 配置有两个作用，一个是限定要展示的字段，另外一个是配置展示字段的顺序。
+    #fieldsets 用来控制页面布局，先用它来替换上述代码的 fields
+    #     fieldsets = (
+    #     (名称, {内容}),
+    #     (名称, {内容}),
+    # )
+    #在编辑页面隐藏的字段
     exclude = ['owner']
     form_layout = (
         Fieldset(
@@ -91,6 +101,7 @@ class PostAdmin(BaseOwnerAdmin):
         )
     )
 
+    #指定了可以编辑该选项
     def operator(self, obj):
         return format_html(
             '<a href="{}">编辑</a>',

@@ -23,6 +23,7 @@ from comment.views import CommentView
 from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
 from django.contrib.sitemaps import views as sitemap_views
+from .autocomplete import CategoryAutocomplete,TagAutocomplete
 import xadmin
 
 
@@ -38,5 +39,7 @@ urlpatterns = [
     url(r'^super_admin/',admin.site.urls,name='super-admin'),
     url(r'^admin/', xadmin.site.urls,name='xadmin'),
     url(r'^rss|feed/',LatestPostFeed(),name='rss'),
-    url(r'^sitemap\.xml$',sitemap_views.sitemap,{'sitemaps':{'posts':PostSitemap}})
+    url(r'^sitemap\.xml$',sitemap_views.sitemap,{'sitemaps':{'posts':PostSitemap}}),
+    url(r'category-autocomplete/$',CategoryAutocomplete.as_view(),name='category-autocomplete'),
+    url(r'tag-autocomplete/$',TagAutocomplete.as_view(),name='tag-autocomplete')
 ]
