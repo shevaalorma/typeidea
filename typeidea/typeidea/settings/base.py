@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'ckeditor',
+    'ckeditor_uploader',
     'dal',
     'dal_select2',
     'django.contrib.admin',
@@ -140,3 +141,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'themes', THEME, 'static')]
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = [os.path.join(BASE_DIR,"media")]
+CKEDITOR_UPLOAD_PATH = "article_images"

@@ -2,6 +2,7 @@ from django import forms
 from dal import autocomplete
 from ckeditor.widgets import CKEditorWidget
 from .models import Category,Tag,Post
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 class PostAdminForm(forms.ModelForm):
     desc = forms.CharField(widget=forms.Textarea,label='摘要',required=False)
@@ -15,7 +16,7 @@ class PostAdminForm(forms.ModelForm):
         widget=autocomplete.ModelSelect2Multiple(url='tag-autocomplete'),
         label='标签'
     )
-    comment = forms.CharField(widget=CKEditorWidget(),label='正文',required=True)
+    content = forms.CharField(widget=CKEditorUploadingWidget(),label='正文',required=True)
 
     class Meta:
         model = Post
