@@ -3,7 +3,9 @@ from rest_framework import serializers,pagination
 from .models import Post, Category
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='api-post-detail')
+
     category = serializers.SlugRelatedField(
         read_only=True,
         slug_field='name'
@@ -21,7 +23,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'title', 'category', 'tag', 'owner', 'created_time']
+        fields = ['url','id', 'title', 'category', 'tag', 'owner', 'created_time']
 
 
 class PostDetailSerializer(PostSerializer):

@@ -22,7 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'g(w&2r(59q_v*xt@e8&hy$1(bnc1v_rdh5oss#fmj+albrti^e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -104,6 +103,9 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+profile = os.environ.get('TYPEIDEA_PROFILE','develop')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE","typeidea.setting.%s" %profile)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

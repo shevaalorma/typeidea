@@ -123,3 +123,6 @@ class PostDetailView(CommonViewMixin, DetailView):
         elif increase_uv:
             Post.objects.filter(pk=self.object.id).update(uv=F('uv') + 1)
 
+
+
+

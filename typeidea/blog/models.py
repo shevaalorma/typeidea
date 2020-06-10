@@ -111,7 +111,7 @@ class Post(models.Model):
             tag = None
             post_list = []
         else:
-            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)\
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL) \
                 .select_related('owner', 'category')
         return post_list, tag
 
@@ -123,13 +123,16 @@ class Post(models.Model):
             category = None
             post_list = []
         else:
-            post_list = category.post_set.filter(status=Post.STATUS_NORMAL)\
+            post_list = category.post_set.filter(status=Post.STATUS_NORMAL) \
                 .select_related('owner', 'category')
         return post_list, category
 
     @classmethod
-    def latest_posts(cls):
-        return cls.objects.filter(status=cls.STATUS_NORMAL)
+    def latest_posts(cls, with_related=True):
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+        if with_related:
+            queryset = queryset.select_related('owner', 'category')
+        return queryset
 
     @classmethod
     def hot_posts(cls):

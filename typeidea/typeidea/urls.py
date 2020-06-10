@@ -31,6 +31,8 @@ from rest_framework.routers import DefaultRouter
 from blog.apis import PostViewSet,CategoryViewSet
 from rest_framework.documentation import include_docs_urls
 
+from django.views.decorators.cache import cache_page
+
 router = DefaultRouter()
 router.register(r'post',PostViewSet,base_name='api-post')
 router.register(r'category',CategoryViewSet,base_name='api-category')
@@ -56,4 +58,12 @@ urlpatterns = [
     # url(r'^api/post/',PostList.as_view(),name='post-list'),
     url(r'^api/',include(router.urls,namespace="api")),
     url(r'^api/docs/',include_docs_urls(title='typeidea apis')),
+    url(r'^sitemap\.xml',cache_page(60*20,key_prefix='sitemap_cache_')(sitemap_views.sitemap),{'sitemaps':{'posts':PostSitemap}}),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+
+if settings.DEBUG:
+    # import debug_toolbar
+    # urlpatterns = [
+    #     url(r'^__debug__/',include(debug_toolbar.urls)),
+    # ] + urlpatterns
+    urlpatterns += [url(r'^silk/',include('silk.urls',namespace='silk'))]
